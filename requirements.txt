@@ -1,9 +1,16 @@
+brainpy>=2.4.0
+jax
+jaxlib
 loguru
+matplotlib
 mkdocs
+numpy
 pip
 pytest
 python-dotenv
+pyyaml
 ruff
+scipy
 tqdm
 typer
 -e .

@@ -1,0 +1,64 @@
+# =============================================================================
+# Wendling BrainPy Forward Simulation Configuration
+# =============================================================================
+# This config file controls single-node forward simulation.
+# All time values are in milliseconds, frequencies in Hz.
+
+seed: 0
+dt_ms: 0.1
+duration_ms: 20000
+
+# -----------------------------------------------------------------------------
+# Model Parameters (Wendling 2002 defaults)
+# -----------------------------------------------------------------------------
+params:
+  # Gains (mV)
+  A: 5.0
+  B: 22.0
+  G: 18.0
+  
+  # Time constants (1/s)
+  a: 100.0
+  b: 50.0
+  g: 500.0
+  
+  # Connectivity constant
+  C: 135.0
+  
+  # Sigmoid parameters
+  e0: 2.5
+  v0: 6.0
+  r: 0.56
+  
+  # Input drive
+  p_mean: 90.0
+  p_sigma: 2.0
+
+# -----------------------------------------------------------------------------
+# Stimulus Configuration
+# -----------------------------------------------------------------------------
+stim:
+  kind: "sine"        # "baseline" | "sine"
+  f_hz: 40            # Stimulus frequency (Hz) - for ASSR: 20, 30, or 40
+  amp: 1.0            # Stimulus amplitude (Hz)
+  phase: 0.0          # Phase offset (radians)
+  onset_ms: 500       # Stimulus onset (ms)
+  offset_ms: 19500    # Stimulus offset (ms)
+
+# -----------------------------------------------------------------------------
+# Monitors (variables to record)
+# -----------------------------------------------------------------------------
+monitors:
+  - lfp
+  - y0
+  - y1
+  - y2
+  - y3
+
+# -----------------------------------------------------------------------------
+# Output Configuration
+# -----------------------------------------------------------------------------
+output:
+  save_dir: "./results"
+  filename: "wendling_forward"
+  format: "npz"       # "npz" | "csv"
