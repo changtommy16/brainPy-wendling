@@ -67,114 +67,151 @@ Think of this repository as a 4-stage pipeline:
 
 ---
 
-## 2. `simulate()`: Single, Network, & Whole-Brain
+## 2. API Reference & Configuration Schema
 
-The `simulate()` function takes configuration dictionaries and delegates execution to `run_simulation()`.
+This section details every configuration parameter available in the system.
 
-```python
-simulate(sim_cfg, model_cfg, network_cfg=None, stim_cfg=None, noise_cfg=None, monitor_cfg=None) -> SimResult
-```
+### 2.1 Simulation Config (`sim_cfg`)
+Controls time integration and execution backend.
 
-### 2.1 `SimResult`
-The result object contains:
-*   `t_s`: Time array in seconds (shape `(T,)`).
-*   `lfp`: **Time-major** LFP proxy (shape `(T, N)`).
-*   `states`: Optional monitored internal states.
-*   `meta`: Metadata (dt, duration, seed, connectivity info, etc.).
+| Key | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `dt_ms` | `float` | `0.1` | Integration time step in milliseconds. |
+| `duration_ms` | `float` | `5000.0` | Total simulation duration in milliseconds. |
+| `dt_s` | `float` | - | (Alternative) Time step in seconds. |
+| `duration_s` | `float` | - | (Alternative) Duration in seconds. |
+| `jit` | `bool` | `True` | Enable BrainPy JIT compilation (highly recommended for speed). |
+| `integrator` | `str` | `"rk4"` | Numerical integrator. Options: `"rk4"`, `"euler"`. |
+| `debug` | `bool` | `False` | If True, automatically monitors internal variables (`y0`...`y4`). |
 
-### 2.2 `sim_cfg`
-Controls time and execution settings.
-*   `dt_ms` / `duration_ms`: Time step and duration (recommended).
-*   `jit`: `True` (recommended) to enable BrainPy JIT compilation.
+### 2.2 Model Parameters (`model_cfg`)
+Wendling Neural Mass Model parameters.
 
-### 2.3 `model_cfg`
-Wendling local parameters (used for both single nodes and networks).
-Defaults are defined in `src/wendling_sim/model/params.py`.
+| Key | Unit | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `A` | mV | `3.25` | Excitatory synaptic gain (average PSP amplitude). |
+| `B` | mV | `22.0` | Slow inhibitory synaptic gain. |
+| `G` | mV | `10.0` | Fast inhibitory synaptic gain. |
+| `a` | Hz ($s^{-1}$) | `100.0` | Reciprocal of excitatory time constant. |
+| `b` | Hz ($s^{-1}$) | `50.0` | Reciprocal of slow inhibitory time constant. |
+| `g` | Hz ($s^{-1}$) | `500.0` | Reciprocal of fast inhibitory time constant. |
+| `C` | - | `135.0` | Average number of synaptic contacts (connectivity constant). |
+| `C1`..`C7` | - | Derived | Layer-specific connectivity constants (derived from C). |
+| `p_mean` | - | `90.0` | Mean external input noise. |
+| `p_sigma` | - | `2.0` | Standard deviation of external input noise. |
 
-You can pass a partial dict to override specific parameters:
-```python
-model_cfg = {"A": 5.0, "B": 10.0, "G": 15.0}
-```
+**Presets:** You can load standard parameters for seizure types using `get_type_params(type_name)`.
+*   **Type 1:** Background (1-7 Hz)
+*   **Type 2:** Sporadic Spikes
+*   **Type 3:** Sustained SWD (3-6 Hz)
+*   **Type 4:** Alpha-like (8-13 Hz)
+*   **Type 5:** LVFA (10-20 Hz)
+*   **Type 6:** Quasi-sinusoidal
 
-Or load a preset type:
-```python
-model_cfg = get_type_params("Type4")
-```
+### 2.3 Network Configuration (`network_cfg`)
+Required when `n_nodes > 1`. Defines the structural connectivity matrix $W$.
 
-### 2.4 `network_cfg`: Building Networks & Whole-Brain Models
-This is required if `n_nodes > 1`.
+| Key | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `n_nodes` | `int` | `1` | Number of nodes. |
+| `G_net` | `float` | `0.0` | **Global Coupling Strength.** Scalar multiplier for network input. Input to node $i$ is $G_{net} 
+cdot 
+sum_j W_{ij} 
+cdot 	ext{output}_j$. |
+| `W` | `array` | `None` | Direct numpy array of shape `(N, N)`. |
+| `W_path` | `str` | `None` | Path to `.npy`, `.csv`, or `.mat` file containing $W$. |
+| `normalize` | `str` | `"row_sum"` | Normalization method (see below). |
+| `remove_self_loops` | `bool` | `True` | If True, sets diagonal elements $W_{ii} = 0$. |
 
-**Key Logic**: `W[i, j]` represents the weight from source `j` to target `i`.
-Equation: `u_net = G_net * (W @ out)`
+**Normalization Methods:**
+*   `"row_sum"`: $W_{ij} = W_{ij} / 
+sum_k W_{ik}$. Ensures total input to each node is normalized relative to its in-degree strength. (Row stochastic).
+*   `"max"`: $W_{ij} = W_{ij} / 
+max(W)$. Scales weights relative to the strongest connection in the network.
+*   `"none"`: No normalization is applied.
 
-You can provide connectivity in 4 ways:
+**File Formats for `W_path`:**
+*   `.npy`: Standard Numpy binary.
+*   `.csv`: Comma-separated values.
+*   `.mat`: MATLAB file. The loader heuristically looks for variables named `'W'`, `'sc'`, `'len'`, `'data'`, or takes the first 2D array found.
 
-**A) Direct Matrix**
-```python
-network_cfg = {"n_nodes": 20, "W": my_numpy_matrix, "G_net": 0.8, "normalize": "row_sum"}
-```
+### 2.4 Noise Configuration (`noise_cfg`)
 
-**B) File Path (`.npy`, `.mat`)**
-```python
-network_cfg = {
-    "n_nodes": 86,
-    "W_path": "data/connectome/W.npy",
-    "normalize": "row_sum",
-    "G_net": 0.6,
-}
-```
+| Key | Default | Description |
+| :--- | :--- | :--- |
+| `seed` | `None` | Random seed for reproducibility. |
+| `mode` | `"gaussian"` | Noise distribution. (Currently only gaussian is fully supported in core). |
+| `shared` | `False` | (Network only) If True, all nodes receive the exact same noise time series. |
+| `p_mean` | - | Overrides `model_cfg['p_mean']` if provided. |
+| `p_sigma` | - | Overrides `model_cfg['p_sigma']` if provided. |
 
-**C) Generator (for Toy Networks)**
-Supported: `erdos_renyi`, `small_world`, `ring_lattice`, etc.
-```python
-network_cfg = {
-    "n_nodes": 20,
-    "generator": {
-        "name": "erdos_renyi",
-        "options": {"p": 0.2, "weight_dist": "lognormal", "seed": 123},
-    },
-    "G_net": 0.8,
-}
-```
+### 2.5 Simulation Output (`SimResult`)
+The object returned by `simulate()`.
 
-**D) Custom Builder**
-Pass a callable function that returns the weight matrix `W`.
-
----
-
-## 3. PSD Feature & Target Preparation
-
-The project primarily uses Power Spectral Density (PSD) for fitting.
-
-### 3.1 ROI Modes (`roi`)
-When computing PSD from LFP `(T, N)`:
-*   `roi="none"`: Keep PSD for every node -> Shape `(F, N)`.
-*   `roi="mean"`: Average LFP across nodes first, then compute PSD -> Shape `(F, 1)`. (**Recommended for beginners**).
-*   `roi="subset"`: Compute for specific nodes only.
-
-### 3.2 Aligning Target Data
-Welch's method depends on `fs` and `nperseg`. If your target data was computed with different settings, the frequency bins (`freqs`) won't match the simulation.
-
-**Solution:** Interpolate your target PSD to match the simulation's frequency bins (see `scripts/demo_hcp_optimize.py` for an example).
+*   `res.t_s`: `(T,)` array. Time in seconds.
+*   `res.lfp`: `(T, N)` array. Simulated Local Field Potential (proxy). Time is the first dimension.
+*   `res.states`: `Dict[str, (T, N)]` (Optional). Contains raw state variables (e.g., `'y0'`...`'y4'`) if `monitor_cfg` was set.
+*   `res.meta`: Dictionary containing full config used for the run (dt, seed, params, connectivity info).
 
 ---
 
-## 4. Loss Functions
+## 3. Optimization
 
-The project uses a **Registry** pattern for loss functions, allowing you to select losses via config strings (e.g., `"loss_name": "psd_mse"`).
+`optimize()` automates the parameter search using `nevergrad`.
 
-### 4.1 Built-in Losses
-*   `psd_mse`: Mean Squared Error of PSD.
-*   `weighted_psd_mse`: MSE with frequency weights.
-*   `log_psd_mse`: MSE of log-transformed PSD.
+### 3.1 Optimizer Config (`opt_cfg`)
 
-### 4.2 Custom Losses
+| Key | Default | Description |
+| :--- | :--- | :--- |
+| `budget` | `100` | Number of simulation evaluations allowed. |
+| `optimizer` | `"NGOpt"` | Nevergrad algorithm name (e.g., `"CMA"`, `"DE"`, `"TwoPointsDE"`). |
+| `num_workers` | `1` | Number of parallel workers. |
+| `seed` | `0` | Random seed for the optimizer's proposal generation. |
+
+### 3.2 Objective Config (`objective_cfg`)
+Defines "how to evaluate one simulation".
+
+Must contain:
+1.  `sim_cfg`: (See 2.1)
+2.  `network_cfg`: (See 2.3) - *Required for network models.*
+3.  `target`: The ground truth data (usually a PSD array or loaded from file).
+4.  **Loss Definition:** Either `loss_name` (single) or `losses` (list).
+
+**Example of Multi-Loss:**
+```python
+"losses": [
+    {"name": "psd_mse", "weight": 1.0, "cfg": {"freq_range": (0, 50)}},
+    {"name": "log_psd_mse", "weight": 0.5}
+]
+```
+
+### 3.3 Search Space
+Defined using `wendling_sim.optimize.search_space.SearchSpace`.
+
+```python
+search_space = SearchSpace(
+    bounds={"A": (1, 10), "G_net": (0, 5)},
+    log_scale={"A"}  # Optional: Optimizes log10(A) instead of A
+)
+```
+
+**Rule:** Any parameter in `bounds` is treated as a variable to optimize.
+*   If name is `G_net`, it updates the network coupling.
+*   Otherwise, it updates `model_cfg`.
+
+---
+
+## 4. Advanced Usage
+
+### 4.1 Custom Loss Functions
 You can register a custom loss function at runtime in your script:
 
 ```python
 from wendling_sim.loss.registry import register_loss
 
 def my_custom_loss(psd, target_psd, freqs, **kwargs):
+    # psd: (F,) or (F, N)
+    # target_psd: same shape
     return float(((psd - target_psd) ** 2).mean())
 
 register_loss("my_loss", my_custom_loss)
@@ -182,34 +219,69 @@ register_loss("my_loss", my_custom_loss)
 
 Then use `"loss_name": "my_loss"` in your configuration.
 
----
+### 4.2 Handling Target Data (PSD)
+Welch's method depends on `fs` (sampling rate) and `nperseg` (window length). If your target data was computed with different settings, the frequency bins (`freqs`) won't match the simulation.
 
-## 5. Optimization
-
-`optimize()` automates the parameter search.
-
-### 5.1 Configuration
-*   **`opt_cfg`**: Optimizer settings (budget, algorithm, number of workers).
-*   **`objective_cfg`**: Simulation and Loss settings.
-
-### 5.2 Search Space
-Define which parameters to optimize and their bounds.
+**Solution:** Interpolate your target PSD to match the simulation's frequency bins.
 
 ```python
-from wendling_sim.optimize.search_space import SearchSpace
+import numpy as np
 
-search_space = SearchSpace(
-    bounds={"A": (1, 10), "B": (5, 40), "G_net": (0, 5)},
-    log_scale={"A", "B"},  # Parameters to sample in log-scale
-)
+# 1. Get simulation frequencies
+fs = 1000.0 / sim_cfg["dt_ms"]
+sim_freqs = np.fft.rfftfreq(nperseg, 1/fs)
+
+# 2. Interpolate target
+target_psd_aligned = np.interp(sim_freqs, target_freqs_raw, target_psd_raw)
 ```
 
-**Note on `G_net`**: If `G_net` is in the search space, it automatically overrides `network_cfg["G_net"]`. All other parameters are assumed to be model parameters (`model_cfg`).
+See `scripts/demo_hcp_optimize.py` for a full implementation of this alignment.
 
 ---
 
-## 6. Config Philosophy
+## 5. Troubleshooting & FAQ
 
-This project uses Python dictionaries (or YAML files loading into dicts) for configuration.
-*   Keep experiments reproducible by saving the config used for every run.
-*   See `configs/` for default YAML templates.
+### Q1: `ModuleNotFoundError: No module named 'wendling_sim'`
+**Solution:** The package is not installed in your current environment.
+*   **Fix 1 (Recommended):** Install in editable mode: `pip install -e .`
+*   **Fix 2:** Add the source directory to your python path manually at the top of your script:
+    ```python
+    import sys
+    sys.path.append("path/to/brainPy_modeling/src")
+    ```
+
+### Q2: Optimization returns `inf` or `nan` loss.
+**Causes:**
+*   **Unstable Parameters:** The optimizer proposed parameters (like extremely high `G_net`) that caused the simulation to blow up (values -> infinity).
+*   **Log(0):** Using `log_psd_mse` on a silent signal (zeros).
+**Fix:** Restrict your `SearchSpace` bounds to physically plausible ranges.
+
+### Q3: Why does `loss` look tiny (~1e-8) but the fit is bad?
+**Cause:** `psd_mse` squares the errors. If power values are `1e-4`, the error is `1e-8`.
+**Fix:** Use `log_psd_mse` (Log-MSE) or `weighted_psd_mse` to emphasize the **shape** of the power spectrum rather than raw amplitude.
+
+### Q4: I changed `integrator` to `euler` but results didn't change.
+**Reason:** The current Wendling model implementation (`wendling_single.py`) uses a manual Euler step in its `update()` method for performance and simplicity. The BrainPy integrator setting is currently a placeholder for this specific model.
+
+---
+
+## 6. Extending the Codebase
+
+| To Change... | Edit File... |
+| :--- | :--- |
+| **Model Equations** | `src/wendling_sim/model/wendling_single.py` |
+| **Network Coupling** | `src/wendling_sim/model/wendling_network.py` |
+| **Connectivity Loading** | `src/wendling_sim/connectivity/io.py` |
+| **Loss Functions** | `src/wendling_sim/loss/` |
+| **Optimization Logic** | `src/wendling_sim/optimize/nevergrad_engine.py` |
+
+---
+
+## 7. Recommended Workflow
+
+1.  **Exploration:** Use `scripts/run_simulate.py` to test different parameters manually and visualize the output time series.
+2.  **Calibration:** Use `scripts/run_optimize.py` to fit a **single node** to your desired power spectrum (e.g., finding parameters that generate Alpha waves).
+3.  **Network Modeling:** Once you have good local parameters, define a `network_cfg` with your connectivity matrix and run simulations to study large-scale dynamics (like functional connectivity).
+4.  **Whole-Brain Fitting:** Use optimization to find the best global coupling `G_net` that matches empirical FC data.
+
+```

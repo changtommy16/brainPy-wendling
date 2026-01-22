@@ -4,6 +4,10 @@ A high-performance implementation of the Wendling Neural Mass Model using [Brain
 
 ## Quick Start
 
+### Prerequisites (Windows Users)
+**Windows users must use [WSL2 (Ubuntu)](https://learn.microsoft.com/en-us/windows/wsl/install).**  
+This project relies on JAX/BrainPy features that are not fully supported on native Windows. Please install WSL2 and run all commands inside your Ubuntu terminal.
+
 ### 1. Installation
 
 We recommend using Conda:

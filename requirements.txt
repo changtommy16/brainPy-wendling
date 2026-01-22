@@ -1,31 +1,37 @@
-# Core dependencies
-brainpy>=2.4.0
-jax>=0.4.20
-jaxlib>=0.4.20
+# Requirements for BrainPy Wendling Model
+# Environment: brainpy311 conda environment (Python 3.11)
 
-# Optimization
-nevergrad>=1.0.0
+# === Core Dependencies ===
+# JAX and BrainPy (GPU support - CUDA 12 recommended)
+# Note: For non-CUDA systems, you may need to install jax[cpu] instead.
+jax==0.9.0
+jaxlib==0.9.0
+jax-cuda12-pjrt==0.9.0
+jax-cuda12-plugin==0.9.0
+brainpy[jax]==2.7.6
 
 # Scientific computing
-numpy>=1.24.0
-scipy>=1.10.0
-matplotlib>=3.7.0
+numpy==2.3.5
+scipy==1.17.0
+matplotlib==3.10.8
 
-# Configuration & utilities
+# === Optimization ===
+nevergrad==1.0.12
+tqdm==4.67.1
+
+# === Data Handling ===
+pandas==2.3.3
+h5py==3.15.1
+
+# === Configuration & Utilities ===
 pyyaml>=6.0
 python-dotenv>=1.0.0
 loguru>=0.7.0
-tqdm>=4.65.0
 
-# Development & testing
+# === Development & Testing ===
 pytest>=7.0.0
 ruff>=0.1.0
-
-# Documentation
 mkdocs>=1.5.0
 
-# CLI (optional)
-typer>=0.9.0
-
-# Install package in editable mode
+# === Package Installation ===
 -e .

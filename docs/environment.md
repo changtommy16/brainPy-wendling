@@ -2,6 +2,15 @@
 
 This guide details how to set up the environment for the BrainPy Wendling Model project.
 
+## Prerequisites
+
+**Operating System:** Linux or macOS.
+**Windows Users:** You **must** use [WSL2 (Windows Subsystem for Linux)](https://learn.microsoft.com/en-us/windows/wsl/install) with an Ubuntu distribution. This project relies on JAX and BrainPy features that are not fully supported or easily configured on native Windows.
+
+1.  Install WSL2 and Ubuntu from the Microsoft Store.
+2.  Open your Ubuntu terminal.
+3.  Follow the "Quick Start" instructions below *inside* your Ubuntu terminal.
+
 ## Quick Start (Conda)
 
 We recommend using Conda to manage the environment.
