@@ -3,7 +3,11 @@
     "allow": [
       "WebFetch(domain:brainpy.readthedocs.io)",
       "WebSearch",
-      "Bash(python:*)"
+      "Bash(python:*)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:brainpy-examples.readthedocs.io)",
+      "Bash(grep:*)",
+      "Bash(del \"C:\\\\brainPy_modeling\\\\test_batch.py\")"
     ]
   }
 }

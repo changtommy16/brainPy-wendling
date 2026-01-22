@@ -1,0 +1,24 @@
+[
+  {
+    "case": "neurolib_like_psp",
+    "best": {
+      "case": "neurolib_like_psp",
+      "G_net": 4.0,
+      "heterogeneity": 0.0,
+      "fc_corr": 0.34444090520653786,
+      "elapsed_s": 2.042503833770752
+    },
+    "count": 20
+  },
+  {
+    "case": "neurolib_like_bold",
+    "best": {
+      "case": "neurolib_like_bold",
+      "G_net": 5.0,
+      "heterogeneity": 0.0,
+      "fc_corr": 0.4075428916536396,
+      "elapsed_s": 2.025059938430786
+    },
+    "count": 20
+  }
+]

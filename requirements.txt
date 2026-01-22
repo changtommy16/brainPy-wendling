@@ -1,16 +1,31 @@
+# Core dependencies
 brainpy>=2.4.0
-jax
-jaxlib
-loguru
-matplotlib
-mkdocs
-numpy
-pip
-pytest
-python-dotenv
-pyyaml
-ruff
-scipy
-tqdm
-typer
+jax>=0.4.20
+jaxlib>=0.4.20
+
+# Optimization
+nevergrad>=1.0.0
+
+# Scientific computing
+numpy>=1.24.0
+scipy>=1.10.0
+matplotlib>=3.7.0
+
+# Configuration & utilities
+pyyaml>=6.0
+python-dotenv>=1.0.0
+loguru>=0.7.0
+tqdm>=4.65.0
+
+# Development & testing
+pytest>=7.0.0
+ruff>=0.1.0
+
+# Documentation
+mkdocs>=1.5.0
+
+# CLI (optional)
+typer>=0.9.0
+
+# Install package in editable mode
 -e .

@@ -1,0 +1,72 @@
+[
+  {
+    "case": "neurolib_like_bold",
+    "G_net": 3.0,
+    "heterogeneity": 0.0,
+    "fc_corr": 0.279187890438272,
+    "elapsed_s": 2.0066938400268555
+  },
+  {
+    "case": "neurolib_like_bold",
+    "G_net": 4.0,
+    "heterogeneity": 0.0,
+    "fc_corr": 0.36095898831577916,
+    "elapsed_s": 2.033878803253174
+  },
+  {
+    "case": "neurolib_like_bold",
+    "G_net": 5.0,
+    "heterogeneity": 0.0,
+    "fc_corr": 0.4075428916536396,
+    "elapsed_s": 2.7285513877868652
+  },
+  {
+    "case": "neurolib_like_bold",
+    "G_net": 6.0,
+    "heterogeneity": 0.0,
+    "fc_corr": 0.3333859681272505,
+    "elapsed_s": 2.0314178466796875
+  },
+  {
+    "case": "neurolib_like_bold",
+    "G_net": 7.0,
+    "heterogeneity": 0.0,
+    "fc_corr": 0.31015829921364385,
+    "elapsed_s": 1.9711589813232422
+  },
+  {
+    "case": "neurolib_like_bold",
+    "G_net": 3.0,
+    "heterogeneity": 0.1,
+    "fc_corr": 0.00044847390675056907,
+    "elapsed_s": 2.000542640686035
+  },
+  {
+    "case": "neurolib_like_bold",
+    "G_net": 4.0,
+    "heterogeneity": 0.1,
+    "fc_corr": 0.00686878928374656,
+    "elapsed_s": 1.991664171218872
+  },
+  {
+    "case": "neurolib_like_bold",
+    "G_net": 5.0,
+    "heterogeneity": 0.1,
+    "fc_corr": 0.03108062970459766,
+    "elapsed_s": 2.018177032470703
+  },
+  {
+    "case": "neurolib_like_bold",
+    "G_net": 6.0,
+    "heterogeneity": 0.1,
+    "fc_corr": 0.15135124683426696,
+    "elapsed_s": 1.9827909469604492
+  },
+  {
+    "case": "neurolib_like_bold",
+    "G_net": 7.0,
+    "heterogeneity": 0.1,
+    "fc_corr": 0.15626341763822993,
+    "elapsed_s": 1.9218332767486572
+  }
+]

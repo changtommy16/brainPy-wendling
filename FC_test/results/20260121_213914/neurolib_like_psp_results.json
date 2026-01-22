@@ -1,0 +1,142 @@
+[
+  {
+    "case": "neurolib_like_psp",
+    "G_net": 1.0,
+    "heterogeneity": 0.0,
+    "fc_corr": 0.3384450806230643,
+    "elapsed_s": 2.55749773979187
+  },
+  {
+    "case": "neurolib_like_psp",
+    "G_net": 2.0,
+    "heterogeneity": 0.0,
+    "fc_corr": 0.3361249036190451,
+    "elapsed_s": 2.065721035003662
+  },
+  {
+    "case": "neurolib_like_psp",
+    "G_net": 3.0,
+    "heterogeneity": 0.0,
+    "fc_corr": 0.3338546050145563,
+    "elapsed_s": 2.0867061614990234
+  },
+  {
+    "case": "neurolib_like_psp",
+    "G_net": 4.0,
+    "heterogeneity": 0.0,
+    "fc_corr": 0.34444090520653786,
+    "elapsed_s": 2.0625221729278564
+  },
+  {
+    "case": "neurolib_like_psp",
+    "G_net": 5.0,
+    "heterogeneity": 0.0,
+    "fc_corr": 0.3002789391158082,
+    "elapsed_s": 2.063810110092163
+  },
+  {
+    "case": "neurolib_like_psp",
+    "G_net": 1.0,
+    "heterogeneity": 0.1,
+    "fc_corr": 0.026797517688600055,
+    "elapsed_s": 2.1062440872192383
+  },
+  {
+    "case": "neurolib_like_psp",
+    "G_net": 2.0,
+    "heterogeneity": 0.1,
+    "fc_corr": 0.05114276589568873,
+    "elapsed_s": 2.080965280532837
+  },
+  {
+    "case": "neurolib_like_psp",
+    "G_net": 3.0,
+    "heterogeneity": 0.1,
+    "fc_corr": 0.03683213178843749,
+    "elapsed_s": 2.1142022609710693
+  },
+  {
+    "case": "neurolib_like_psp",
+    "G_net": 4.0,
+    "heterogeneity": 0.1,
+    "fc_corr": 0.13226014863634866,
+    "elapsed_s": 2.1397206783294678
+  },
+  {
+    "case": "neurolib_like_psp",
+    "G_net": 5.0,
+    "heterogeneity": 0.1,
+    "fc_corr": 0.17702527354729902,
+    "elapsed_s": 2.074981451034546
+  },
+  {
+    "case": "neurolib_like_psp",
+    "G_net": 1.0,
+    "heterogeneity": 0.2,
+    "fc_corr": -0.011453724290070535,
+    "elapsed_s": 2.1141650676727295
+  },
+  {
+    "case": "neurolib_like_psp",
+    "G_net": 2.0,
+    "heterogeneity": 0.2,
+    "fc_corr": 0.005241707773286792,
+    "elapsed_s": 1.992619276046753
+  },
+  {
+    "case": "neurolib_like_psp",
+    "G_net": 3.0,
+    "heterogeneity": 0.2,
+    "fc_corr": 0.039656041504139275,
+    "elapsed_s": 2.0614259243011475
+  },
+  {
+    "case": "neurolib_like_psp",
+    "G_net": 4.0,
+    "heterogeneity": 0.2,
+    "fc_corr": 0.04960983341430295,
+    "elapsed_s": 2.0753402709960938
+  },
+  {
+    "case": "neurolib_like_psp",
+    "G_net": 5.0,
+    "heterogeneity": 0.2,
+    "fc_corr": 0.03902100187419475,
+    "elapsed_s": 2.0594534873962402
+  },
+  {
+    "case": "neurolib_like_psp",
+    "G_net": 1.0,
+    "heterogeneity": 0.3,
+    "fc_corr": 0.006887764826967392,
+    "elapsed_s": 2.054041862487793
+  },
+  {
+    "case": "neurolib_like_psp",
+    "G_net": 2.0,
+    "heterogeneity": 0.3,
+    "fc_corr": 0.028681906835043597,
+    "elapsed_s": 2.0484204292297363
+  },
+  {
+    "case": "neurolib_like_psp",
+    "G_net": 3.0,
+    "heterogeneity": 0.3,
+    "fc_corr": 0.006234574104868753,
+    "elapsed_s": 2.059596300125122
+  },
+  {
+    "case": "neurolib_like_psp",
+    "G_net": 4.0,
+    "heterogeneity": 0.3,
+    "fc_corr": 0.0203779883073155,
+    "elapsed_s": 2.0464210510253906
+  },
+  {
+    "case": "neurolib_like_psp",
+    "G_net": 5.0,
+    "heterogeneity": 0.3,
+    "fc_corr": 0.05473640771250493,
+    "elapsed_s": 2.0671918392181396
+  }
+]

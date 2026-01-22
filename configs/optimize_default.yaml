@@ -1,0 +1,45 @@
+# Default optimization configuration
+# Usage: python scripts/run_optimize.py --config configs/optimize_default.yaml
+
+optimization:
+  budget: 100
+  optimizer: NGOpt  # Options: NGOpt, CMA, DE, PSO, OnePlusOne
+  num_workers: 1
+  seed: 42
+  
+  search_space:
+    A: [1.0, 10.0]
+    B: [5.0, 40.0]
+    G: [5.0, 40.0]
+    a: [50.0, 200.0]
+    b: [20.0, 120.0]
+    g: [200.0, 1200.0]
+  
+  log_scale:
+    - a
+    - b
+    - g
+
+objective:
+  sim_cfg:
+    dt_ms: 0.1
+    duration_ms: 5000.0
+    jit: true
+  
+  psd_cfg:
+    nperseg: 4096
+    freq_range: [1.0, 50.0]
+  
+  loss_name: weighted_psd_mse
+  loss_cfg:
+    roi_band: [8.0, 13.0]  # Alpha band emphasis
+    roi_weight: 5.0
+
+target:
+  type: file  # 'file' or 'type'
+  path: configs/target_psd.npz  # if type=file
+  activity_type: Type4  # if type=type (generates from known params)
+
+output:
+  run_dir: runs/opt_run
+  save_history: true
