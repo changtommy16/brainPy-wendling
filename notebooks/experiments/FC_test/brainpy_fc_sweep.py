@@ -16,7 +16,7 @@ import sys
 import numpy as np
 import scipy.io as sio
 
-PROJECT_ROOT = Path(__file__).resolve().parents[1]
+PROJECT_ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(PROJECT_ROOT / "src"))
 
 from wendling_sim import simulate  # noqa: E402
@@ -43,7 +43,7 @@ CONFIG_ALL_CASES = {
     "jit": True,
     "duration_ms": 20000.0,
     "dt_ms": 0.5,
-    "outdir": PROJECT_ROOT / "FC_test" / "results",
+    "outdir": Path(__file__).resolve().parent / "results",
     "use_neurolib_dataset": False,
     "neurolib_dataset": DEFAULT_NEUROLIB_DATASET,
 }
@@ -60,7 +60,7 @@ CONFIG_PSP_ONLY = {
     "jit": True,
     "duration_ms": 2000.0,
     "dt_ms": 0.5,
-    "outdir": PROJECT_ROOT / "FC_test" / "results",
+    "outdir": Path(__file__).resolve().parent / "results",
     "use_neurolib_dataset": False,
     "neurolib_dataset": DEFAULT_NEUROLIB_DATASET,
 }
@@ -77,7 +77,7 @@ CONFIG_PSP_NO_NORM = {
     "jit": True,
     "duration_ms": 2000.0,
     "dt_ms": 0.5,
-    "outdir": PROJECT_ROOT / "FC_test" / "results",
+    "outdir": Path(__file__).resolve().parent / "results",
     "use_neurolib_dataset": False,
     "neurolib_dataset": DEFAULT_NEUROLIB_DATASET,
 }
@@ -94,7 +94,7 @@ CONFIG_FULL = {
     "jit": True,
     "duration_ms": 10000.0,  # Full duration
     "dt_ms": 0.5,
-    "outdir": PROJECT_ROOT / "FC_test" / "results",
+    "outdir": Path(__file__).resolve().parent / "results",
     "use_neurolib_dataset": False,
     "neurolib_dataset": DEFAULT_NEUROLIB_DATASET,
 }
@@ -111,7 +111,7 @@ CONFIG_NEUROLIB_FULL = {
     "jit": True,
     "duration_ms": 10000.0,
     "dt_ms": 0.1,
-    "outdir": PROJECT_ROOT / "FC_test" / "results",
+    "outdir": Path(__file__).resolve().parent / "results",
     "use_neurolib_dataset": True,
     "neurolib_dataset": DEFAULT_NEUROLIB_DATASET,
 }

@@ -9,9 +9,9 @@ import time
 
 import numpy as np
 
-PROJECT_ROOT = Path(__file__).resolve().parents[1]
+PROJECT_ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(PROJECT_ROOT / "src"))
-sys.path.insert(0, str(PROJECT_ROOT / "FC_test"))
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from wendling_sim import simulate  # noqa: E402
 from wendling_sim.connectivity.io import load_connectivity  # noqa: E402
